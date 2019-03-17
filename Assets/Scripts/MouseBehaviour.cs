@@ -21,7 +21,7 @@ public class MouseBehaviour : MonoBehaviour
     {
         // マウスクリック時の座標を取得
         this.UpdateAsObservable()
-            .Where(_ => Input.GetMouseButtonDown(0) && !isClick.Value)
+            .Where(_ => Input.GetMouseButtonDown(0))
             .Subscribe(_ => { GetClickObjectName(); });
 
         // IObservable<(Vector3 screenPoint, Vector3 offset)> clickVector3 = Observable
