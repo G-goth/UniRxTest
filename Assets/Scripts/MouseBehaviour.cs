@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,17 +21,15 @@ public class MouseBehaviour : MonoBehaviour
     void Start()
     {
         // マウスクリック時の座標を取得
-        this.UpdateAsObservable()
-            .Where(_ => Input.GetMouseButtonDown(0))
-            .Subscribe(_ => { GetClickObjectName(); });
-
-        // IObservable<(Vector3 screenPoint, Vector3 offset)> clickVector3 = Observable
-        //     .EveryUpdate()
+        // this.UpdateAsObservable()
         //     .Where(_ => Input.GetMouseButtonDown(0))
-        //     .Select(_ => {
-        //         return ClickVector3();
-        //     });
-        // clickVector3.Subscribe(clickOffset => { GetClickObjectName(); }).AddTo(gameObject);
+        //     .Subscribe(_ => { GetClickObjectName(); });
+        // マウスホールド時の挙動
+        this.FixedUpdateAsObservable()
+            .Where(_ => Input.GetMouseButton(0))
+            .Subscribe(_ => {
+                GetObjectByRayCastHit();
+            });
     }
 
     /// <summary>
@@ -54,4 +53,20 @@ public class MouseBehaviour : MonoBehaviour
         }
     }
 
+    private List<GameObject> objectList = new List<GameObject>();
+    private GameObject GetObjectByRayCastHit()
+    {
+        GameObject test = (default);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit = new RaycastHit();
+        if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
+        {
+            objectList.Add(hit.collider.gameObject);
+            Debug.Log(hit.collider.gameObject.name);
+        }
+        return test;
+    }
+    private void GetObjectOnHoldingMouseButton()
+    {
+    }
 }
