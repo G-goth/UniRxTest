@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Player;
+﻿using Player;
 using InputProviders;
 
 public class ServiceLocatorProvider : SingletonMonoBehaviour<ServiceLocatorProvider>
