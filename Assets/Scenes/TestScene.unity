@@ -1023,6 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _material: {fileID: 2100000, guid: 2419f5d8191ea6348833edd35d9cb257, type: 2}
+  _defMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!4 &1661510361
 Transform:
   m_ObjectHideFlags: 0
