@@ -13,18 +13,18 @@ public static class ListExtensions
     /// <param name="addObj">追加したい要素</param>
     /// <typeparam name="T">任意のパラメーター</typeparam>
     /// <returns>要素を省いて追加してList<T>を返す</returns>
-    public static List<T> AddTriming<T>(this IList<T> eList, T addObj) where T : IComparable<T>
+    public static List<T> AddTriming<T>(this IList<T> extList, T addObj)
     {
-        List<T> addListObj = new List<T>();
-        if(addListObj.Contains(addObj) != false)
+        // List<T> addListObj = new List<T>();
+        if(extList.Contains(addObj) != false)
         {
             // 何もしない
         }
         else
         {
-            addListObj.Add(addObj);
+            extList.Add(addObj);
         }
-        return addListObj;
+        return extList.ToList();
     }
 }
 
@@ -74,11 +74,8 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            if(objectList.Contains(hit.collider.gameObject) == false)
-            {
-                objectList.Add(hit.collider.gameObject);
-                Debug.Log(hit.collider.gameObject.name);
-            }
+            objectList.AddTriming(hit.collider.gameObject);
+            // Enumerable.Range(0, objectList.Count).Select((int index, GameObject obj) => { return; });
         }
         return objectList;
     }
