@@ -8,7 +8,7 @@ using UniRx.Triggers;
 public static class ListExtensions
 {
     /// <summary>
-    /// List<T>にすでに追加されている要素を省いて追加してList<T>を返す
+    /// List<T>にすでに追加されている要素を省いて追加
     /// </summary>
     /// <param name="addObj">追加したい要素</param>
     /// <typeparam name="T">任意のパラメーター</typeparam>
@@ -20,6 +20,25 @@ public static class ListExtensions
             // 何もしない
         }
         else
+        {
+            extList.Add(addObj);
+        }
+    }
+
+    /// <summary>
+    /// 制限以内のオブジェクト数をList<T>にすでに追加されている要素を省いて追加
+    /// </summary>
+    /// <param name="extList">追加したい要素</param>
+    /// <param name="addObj">任意のパラメーター</param>
+    /// <param name="limit">List<T>に追加するデータの制限</param>
+    /// <typeparam name="T"></typeparam>
+    public static void AddTrimingLimited<T>(this IList<T> extList, T addObj, int limit)
+    {
+        if(extList.Contains(addObj) != false)
+        {
+            // 何もしない
+        }
+        else if(extList.Count < limit)
         {
             extList.Add(addObj);
         }
@@ -45,20 +64,20 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Start()
     {
-        // // マウスクリック時の座標を取得
-        // this.UpdateAsObservable()
-        //     .Subscribe(_ => {
-        //         GetObjectByRayCastHit();
-        //     });
+        // Updateストリームに登録
+        this.UpdateAsObservable()
+            .Subscribe(_ => {
+                Debug.Log("objectList Count is " + objectList.Count);
+            });
         // マウスホールド時の挙動
-        this.FixedUpdateAsObservable()
+        this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButton(0))
             .Subscribe(_ => {
                 GetObjectByRayCastHit();
             });
 
         // マウスクリックリリース時の挙動
-        this.FixedUpdateAsObservable()
+        this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButtonUp(0))
             .Subscribe(_ => {
                 foreach(var obj in objectList)
@@ -81,7 +100,7 @@ public class MouseBehaviour : MonoBehaviour
         return vector3Tuple;
     }
     
-    private List<GameObject> GetObjectByRayCastHit()
+    private void GetObjectByRayCastHit()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit = new RaycastHit();
@@ -93,9 +112,5 @@ public class MouseBehaviour : MonoBehaviour
                 obj.GetComponent<Renderer>().material = _material;
             }
         }
-        return objectList;
-    }
-    private void GetObjectOnHoldingMouseButton()
-    {
     }
 }
