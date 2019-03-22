@@ -15,7 +15,7 @@ public static class ListExtensions
     /// <returns>要素を省いて追加してList<T>を返す</returns>
     public static void AddTriming<T>(this IList<T> extList, T addObj)
     {
-        if(extList.Contains(addObj) != false)
+        if(extList.Contains(addObj) == true)
         {
             // 何もしない
         }
@@ -34,7 +34,7 @@ public static class ListExtensions
     /// <typeparam name="T"></typeparam>
     public static void AddTrimingLimited<T>(this IList<T> extList, T addObj, int limit)
     {
-        if(extList.Contains(addObj) != false)
+        if(extList.Contains(addObj) == true)
         {
             // 何もしない
         }
@@ -48,9 +48,9 @@ public static class ListExtensions
 public class MouseBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private Material _material;
+    private Material _material = (default);
     [SerializeField]
-    private Material _defMaterial;
+    private Material _defMaterial = (default);
     private Vector3 screenPoint;
     private Vector3 offset;
     private Vector3 currentScreenPoint;
@@ -107,6 +107,7 @@ public class MouseBehaviour : MonoBehaviour
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
             objectList.AddTriming(hit.collider.gameObject);
+            // objectList.AddTrimingLimited(hit.collider.gameObject, 3);
             foreach(var obj in objectList)
             {
                 obj.GetComponent<Renderer>().material = _material;
