@@ -127,7 +127,10 @@ public class MouseBehaviour : MonoBehaviour
         {
             if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
             {
-                hit.collider.gameObject.GetComponent<Renderer>().material = _material;
+                foreach(var rend in rendererList)
+                {
+                    rend.material = _material;
+                }
             }
         }
     }
