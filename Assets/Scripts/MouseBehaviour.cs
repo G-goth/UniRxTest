@@ -31,7 +31,7 @@ public static class ListExtensions
     /// <param name="extList">追加したい要素</param>
     /// <param name="addObj">任意のパラメーター</param>
     /// <param name="limit">List<T>に追加するデータの制限</param>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">任意のパラメータ</typeparam>
     public static void AddTrimingLimited<T>(this IList<T> extList, T addObj, int limit)
     {
         if(extList.Contains(addObj) == true)
@@ -43,6 +43,26 @@ public static class ListExtensions
             extList.Add(addObj);
         }
     }
+
+    /// <summary>
+    /// List<T>にすでに追加されている要素を省いて追加して、追加できたかをbool値で返す
+    /// </summary>
+    /// <param name="extList"></param>
+    /// <param name="addObj"></param>
+    /// <typeparam name="T">任意のパラメータ</typeparam>
+    /// <returns>真偽値(ture = 追加できた false = すでにある値)</returns>
+    public static bool IsAddTriming<T>(this IList<T> extList, T addObj)
+    {
+        if(extList.Contains(addObj) == true)
+        {
+            return false;
+        }
+        else
+        {
+            extList.Add(addObj);
+            return true;
+        }
+    }
 }
 
 public class MouseBehaviour : MonoBehaviour
@@ -52,6 +72,7 @@ public class MouseBehaviour : MonoBehaviour
     [SerializeField]
     private Material _defMaterial = (default);
     private List<GameObject> objectList = new List<GameObject>();
+    private List<Renderer> rendererList = new List<Renderer>();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -82,6 +103,7 @@ public class MouseBehaviour : MonoBehaviour
                 {
                     obj.GetComponent<Renderer>().material = _defMaterial;
                 }
+                rendererList.Clear();
             });
     }
 
@@ -103,7 +125,10 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            hit.collider.gameObject.GetComponent<Renderer>().material = _material;
+            if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
+            {
+                hit.collider.gameObject.GetComponent<Renderer>().material = _material;
+            }
         }
     }
 }
