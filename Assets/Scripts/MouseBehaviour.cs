@@ -51,12 +51,7 @@ public class MouseBehaviour : MonoBehaviour
     private Material _material = (default);
     [SerializeField]
     private Material _defMaterial = (default);
-    private Vector3 screenPoint;
-    private Vector3 offset;
-    private Vector3 currentScreenPoint;
-    private Vector3 currentPosition;
     private List<GameObject> objectList = new List<GameObject>();
-    private BoolReactiveProperty isClick = new BoolReactiveProperty();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -64,10 +59,13 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Start()
     {
+        // 「Cube」タグのGameObjectを検索
+        objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
+        
         // Updateストリームに登録
         this.UpdateAsObservable()
             .Subscribe(_ => {
-                Debug.Log("objectList Count is " + objectList.Count);
+                // Debug.Log("objectList Count is " + objectList.Count);
             });
         // マウスホールド時の挙動
         this.UpdateAsObservable()
@@ -84,7 +82,6 @@ public class MouseBehaviour : MonoBehaviour
                 {
                     obj.GetComponent<Renderer>().material = _defMaterial;
                 }
-                objectList.Clear();
             });
     }
 
@@ -106,12 +103,7 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            objectList.AddTriming(hit.collider.gameObject);
-            // objectList.AddTrimingLimited(hit.collider.gameObject, 3);
-            foreach(var obj in objectList)
-            {
-                obj.GetComponent<Renderer>().material = _material;
-            }
+            hit.collider.gameObject.GetComponent<Renderer>().material = _material;
         }
     }
 }
