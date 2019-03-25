@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UniRx;
 using UniRx.Triggers;
 
@@ -125,6 +126,11 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
+            ExecuteEvents.Execute<IRecievedGroup>(
+                target: gameObject,
+                eventData: null,
+                functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject.name)
+            );
             if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
             {
                 foreach(var rend in rendererList)
