@@ -74,7 +74,8 @@ public class MouseBehaviour : MonoBehaviour
     private Material _defMaterial = (default);
     private List<GameObject> objectList = new List<GameObject>();
     private List<Renderer> rendererList = new List<Renderer>();
-    private List<(Renderer, bool)> rendererTupleList = new List<(Renderer, bool)>();
+    private Dictionary<Renderer, bool> rendDict = new Dictionary<Renderer, bool>();
+    // private List<(Renderer rend, bool isRend)> rendererTupleList = new List<(Renderer, bool)>();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -84,6 +85,11 @@ public class MouseBehaviour : MonoBehaviour
     {
         // 「Cube」タグのGameObjectを検索
         objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
+        rendererList = objectList.Select(obj => obj.GetComponent<Renderer>()).ToList();
+        foreach(var rend in rendererList)
+        {
+            rendDict.Add(rend, false);
+        }
         
         // Updateストリームに登録
         this.UpdateAsObservable()
