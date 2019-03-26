@@ -73,9 +73,7 @@ public class MouseBehaviour : MonoBehaviour
     [SerializeField]
     private Material _defMaterial = (default);
     private List<GameObject> objectList = new List<GameObject>();
-    private List<Renderer> rendererList = new List<Renderer>();
-    private Dictionary<Renderer, bool> rendDict = new Dictionary<Renderer, bool>();
-    // private List<(Renderer rend, bool isRend)> rendererTupleList = new List<(Renderer, bool)>();
+    private List<(GameObject obj, bool isObj)> objTupleList = new List<(GameObject, bool)>();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -85,12 +83,11 @@ public class MouseBehaviour : MonoBehaviour
     {
         // 「Cube」タグのGameObjectを検索
         objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
-        rendererList = objectList.Select(obj => obj.GetComponent<Renderer>()).ToList();
-        foreach(var rend in rendererList)
+        for(int i = 0; i < objectList.Count; ++i)
         {
-            rendDict.Add(rend, false);
+            objTupleList.Add((objectList[i], false));
         }
-        
+
         // Updateストリームに登録
         this.UpdateAsObservable()
             .Subscribe(_ => {
@@ -112,7 +109,6 @@ public class MouseBehaviour : MonoBehaviour
                 {
                     obj.GetComponent<Renderer>().material = _defMaterial;
                 }
-                rendererList.Clear();
             });
     }
 
@@ -134,18 +130,25 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
+            foreach(var objTuple in objTupleList)
             {
-                ExecuteEvents.Execute<IRecievedGroup>(
-                    target: gameObject,
-                    eventData: null,
-                    functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
-                );
-                foreach(var rend in rendererList)
+                if(objTuple.isObj != false & hit.collider.gameObject.name == objTuple.obj.name)
                 {
-                    rend.material = _material;
+                    Debug.Log(objTuple.obj.name);
                 }
             }
+            // if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
+            // {
+            //     ExecuteEvents.Execute<IRecievedGroup>(
+            //         target: gameObject,
+            //         eventData: null,
+            //         functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
+            //     );
+            //     foreach(var rend in rendererList)
+            //     {
+            //         rend.material = _material;
+            //     }
+            // }
         }
     }
 }
