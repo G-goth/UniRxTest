@@ -46,7 +46,7 @@ public static class ListExtensions
     }
 
     /// <summary>
-    /// List<T>にすでに追加されている要素を省いて追加して、追加できたかをbool値で返す
+    /// List<T>にすでに追加されている要素を省いて追加しながら、追加できたかをbool値で返す
     /// </summary>
     /// <param name="extList"></param>
     /// <param name="addObj"></param>
@@ -74,6 +74,7 @@ public class MouseBehaviour : MonoBehaviour
     private Material _defMaterial = (default);
     private List<GameObject> objectList = new List<GameObject>();
     private List<Renderer> rendererList = new List<Renderer>();
+    private List<(Renderer, bool)> rendererTupleList = new List<(Renderer, bool)>();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
