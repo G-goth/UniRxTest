@@ -89,13 +89,14 @@ public class MouseBehaviour : MonoBehaviour
             .Subscribe(_ => {
                 // Debug.Log("objectList Count is " + objectList.Count);
             });
+        
         // マウスホールド時の挙動
         this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButton(0))
             .Subscribe(_ => {
                 GetObjectByRayCastHit();
             });
-
+        
         // マウスクリックリリース時の挙動
         this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButtonUp(0))
@@ -126,13 +127,13 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            ExecuteEvents.Execute<IRecievedGroup>(
-                target: gameObject,
-                eventData: null,
-                functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject.name)
-            );
             if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
             {
+                ExecuteEvents.Execute<IRecievedGroup>(
+                    target: gameObject,
+                    eventData: null,
+                    functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
+                );
                 foreach(var rend in rendererList)
                 {
                     rend.material = _material;

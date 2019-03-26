@@ -8,7 +8,7 @@ using UniRx.Triggers;
 
 interface IRecievedGroup : IEventSystemHandler
 {
-    void OnRecieved(string objName);
+    void OnRecieved(GameObject objName);
 }
 
 public class BlockBehaviour : MonoBehaviour, IRecievedGroup
@@ -26,8 +26,8 @@ public class BlockBehaviour : MonoBehaviour, IRecievedGroup
             .Subscribe(_ => { });
     }
 
-    public void OnRecieved(string objName)
+    public void OnRecieved(GameObject obj)
     {
-        Debug.Log("Recieved!!");
+        Debug.Log(obj.name);
     }
 }
