@@ -12,14 +12,15 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Start()
     {
+        var objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
+
         // マウスホールド時の挙動
-        this.UpdateAsObservable()
+        var mouseHold = this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButton(0))
             .Select(_ => GetObjectByRayCastHit())
             .Where(_ => GetObjectByRayCastHit() != null)
-            .Distinct()
             .DistinctUntilChanged()
-            .Subscribe(_ =>{
+            .Subscribe(_ => {
                 ExecuteEvents.Execute<IRecieverGroups>(
                     target: gameObject,
                     eventData: null,
@@ -28,7 +29,7 @@ public class MouseBehaviour : MonoBehaviour
             });
 
         // マウスボタンリリース時の挙動
-        this.UpdateAsObservable()
+         var mouseRelease = this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButtonUp(0))
             .Subscribe(_ => {
                 ExecuteEvents.Execute<IRecieverGroups>(

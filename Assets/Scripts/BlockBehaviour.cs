@@ -31,6 +31,7 @@ public class BlockBehaviour : MonoBehaviour, IRecieverGroups
     public void OnRecieved(GameObject obj)
     {
         Debug.Log(obj.name);
+        obj.GetComponent<Renderer>().material = _material;
     }
     public void OnRecievedMaterialAllChange()
     {
