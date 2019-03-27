@@ -6,13 +6,17 @@ using UnityEngine.EventSystems;
 using UniRx;
 using UniRx.Triggers;
 
-interface IRecievedGroup : IEventSystemHandler
+interface IRecieverGroups : IEventSystemHandler
 {
     void OnRecieved(GameObject objName);
 }
 
-public class BlockBehaviour : MonoBehaviour, IRecievedGroup
+public class BlockBehaviour : MonoBehaviour, IRecieverGroups
 {
+    [SerializeField]
+    private Material _material = (default);
+    [SerializeField]
+    private Material _defMaterial = (default);
     private List<GameObject> objectList = new List<GameObject>();
     private List<Renderer> rendererList = new List<Renderer>();
     
