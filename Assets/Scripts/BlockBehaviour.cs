@@ -8,7 +8,8 @@ using UniRx.Triggers;
 
 interface IRecieverGroups : IEventSystemHandler
 {
-    void OnRecieved(GameObject objName);
+    void OnRecieved(GameObject obj);
+    void OnRecievedMaterialAllChange();
 }
 
 public class BlockBehaviour : MonoBehaviour, IRecieverGroups
@@ -30,5 +31,12 @@ public class BlockBehaviour : MonoBehaviour, IRecieverGroups
     public void OnRecieved(GameObject obj)
     {
         Debug.Log(obj.name);
+    }
+    public void OnRecievedMaterialAllChange()
+    {
+        foreach(var rend in rendererList)
+        {
+            rend.material = _defMaterial;
+        }
     }
 }

@@ -17,6 +17,7 @@ public class MouseBehaviour : MonoBehaviour
             .Where(_ => Input.GetMouseButton(0))
             .Select(_ => GetObjectByRayCastHit())
             .Where(_ => GetObjectByRayCastHit() != null)
+            .Distinct()
             .DistinctUntilChanged()
             .Subscribe(_ =>{
                 ExecuteEvents.Execute<IRecieverGroups>(
@@ -25,15 +26,17 @@ public class MouseBehaviour : MonoBehaviour
                     functor: (reciever, eventData) => reciever.OnRecieved(GetObjectByRayCastHit())
                 );
             });
-        // マウスクリックリリース時の挙動
-        // this.UpdateAsObservable()
-        //     .Where(_ => Input.GetMouseButtonUp(0))
-        //     .Subscribe(_ => {
-        //         foreach(var obj in objectList)
-        //         {
-        //             obj.GetComponent<Renderer>().material = _defMaterial;
-        //         }
-        //     });
+
+        // マウスボタンリリース時の挙動
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetMouseButtonUp(0))
+            .Subscribe(_ => {
+                ExecuteEvents.Execute<IRecieverGroups>(
+                    target: gameObject,
+                    eventData: null,
+                    functor: (reciever, eventData) => reciever.OnRecievedMaterialAllChange()
+                );
+            });
     }
 
     private GameObject GetObjectByRayCastHit()
