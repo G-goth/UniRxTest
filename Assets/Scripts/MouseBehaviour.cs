@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UniRx;
@@ -12,14 +13,13 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Start()
     {
-        var objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
-
+        List<GameObject> cubeObjectList = new List<GameObject>();
         // マウスホールド時の挙動
         var mouseHold = this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButton(0))
             .Select(_ => GetObjectByRayCastHit())
-            .Where(_ => GetObjectByRayCastHit() != null)
-            .DistinctUntilChanged()
+            .Where(cube => cubeObjectList.IsAddTriming(cube) & GetObjectByRayCastHit() != null)
+            // .DistinctUntilChanged()
             .Subscribe(_ => {
                 ExecuteEvents.Execute<IRecieverGroups>(
                     target: gameObject,
@@ -37,6 +37,7 @@ public class MouseBehaviour : MonoBehaviour
                     eventData: null,
                     functor: (reciever, eventData) => reciever.OnRecievedMaterialAllChange()
                 );
+                cubeObjectList.Clear();
             });
     }
 
