@@ -12,7 +12,6 @@ namespace InputProviders
 
         public bool GetJump()
         {
-            // return Input.GetButton("Jump");
             return Input.GetKeyDown(KeyCode.Space);
         }
 
