@@ -25,6 +25,6 @@ public class BlockBehaviour : MonoBehaviour, IRecievedGroup
 
     public void OnRecieved(GameObject obj)
     {
-        // Debug.Log(obj.name);
+        Debug.Log(obj.name);
     }
 }

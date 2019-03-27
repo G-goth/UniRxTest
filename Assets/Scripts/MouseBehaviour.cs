@@ -114,7 +114,13 @@ public class MouseBehaviour : MonoBehaviour
             .Select(_ => cubeObject)
             .DistinctUntilChanged()
             .Skip(1)
-            .Subscribe(_ => Debug.Log("Changed!!"));
+            .Subscribe(_ =>{
+                ExecuteEvents.Execute<IRecievedGroup>(
+                    target: gameObject,
+                    eventData: null,
+                    functor: (reciever, eventData) => reciever.OnRecieved(cubeObject)
+                );
+            });
     }
 
     /// <summary>
@@ -136,11 +142,6 @@ public class MouseBehaviour : MonoBehaviour
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
             cubeObject = hit.collider.gameObject;
-            ExecuteEvents.Execute<IRecievedGroup>(
-                target: gameObject,
-                eventData: null,
-                functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
-            );
         }
     }
 }   
