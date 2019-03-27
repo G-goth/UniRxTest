@@ -19,7 +19,6 @@ public class MouseBehaviour : MonoBehaviour
             .Where(_ => Input.GetMouseButton(0))
             .Select(_ => GetObjectByRayCastHit())
             .Where(cube => cubeObjectList.IsAddTriming(cube) & GetObjectByRayCastHit() != null)
-            // .DistinctUntilChanged()
             .Subscribe(_ => {
                 ExecuteEvents.Execute<IRecieverGroups>(
                     target: gameObject,
