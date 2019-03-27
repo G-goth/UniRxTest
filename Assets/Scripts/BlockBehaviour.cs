@@ -1,18 +1,11 @@
 ﻿using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UniRx;
-using UniRx.Triggers;
+using UniRxTest.Assets.Scripts;
 
-interface IRecieverGroups : IEventSystemHandler
-{
-    void OnRecieved(GameObject obj);
-    void OnRecievedMaterialAllChange();
-}
-
-public class BlockBehaviour : MonoBehaviour, IRecieverGroups
+public class BlockBehaviour : MonoBehaviour, IMessageProvider
 {
     [SerializeField]
     private Material _material = (default);
@@ -28,9 +21,8 @@ public class BlockBehaviour : MonoBehaviour, IRecieverGroups
         rendererList = objectList.Select(obj => obj.GetComponent<Renderer>()).ToList();
     }
 
-    public void OnRecieved(GameObject obj)
+    public void OnRecievedOneShotMaterialChange(GameObject obj)
     {
-        Debug.Log(obj.name);
         obj.GetComponent<Renderer>().material = _material;
     }
     public void OnRecievedMaterialAllChange()

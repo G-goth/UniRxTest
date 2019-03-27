@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UniRx;
 using UniRx.Triggers;
+using UniRxTest.Assets.Scripts;
 
 public class MouseBehaviour : MonoBehaviour
 {
@@ -20,10 +21,10 @@ public class MouseBehaviour : MonoBehaviour
             .Select(_ => GetObjectByRayCastHit())
             .Where(cube => cubeObjectList.IsAddTriming(cube) & GetObjectByRayCastHit() != null)
             .Subscribe(_ => {
-                ExecuteEvents.Execute<IRecieverGroups>(
+                ExecuteEvents.Execute<IMessageProvider>(
                     target: gameObject,
                     eventData: null,
-                    functor: (reciever, eventData) => reciever.OnRecieved(GetObjectByRayCastHit())
+                    functor: (reciever, eventData) => reciever.OnRecievedOneShotMaterialChange(GetObjectByRayCastHit())
                 );
             });
 
@@ -31,7 +32,7 @@ public class MouseBehaviour : MonoBehaviour
          var mouseRelease = this.UpdateAsObservable()
             .Where(_ => Input.GetMouseButtonUp(0))
             .Subscribe(_ => {
-                ExecuteEvents.Execute<IRecieverGroups>(
+                ExecuteEvents.Execute<IMessageProvider>(
                     target: gameObject,
                     eventData: null,
                     functor: (reciever, eventData) => reciever.OnRecievedMaterialAllChange()
