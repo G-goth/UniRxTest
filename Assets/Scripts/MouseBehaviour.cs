@@ -72,8 +72,9 @@ public class MouseBehaviour : MonoBehaviour
     private Material _material = (default);
     [SerializeField]
     private Material _defMaterial = (default);
+    private GameObject cubeObject = (default);
     private List<GameObject> objectList = new List<GameObject>();
-    private List<(GameObject obj, bool isObj)> objTupleList = new List<(GameObject, bool)>();
+    private List<Renderer> rendererList = new List<Renderer>();
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -83,10 +84,7 @@ public class MouseBehaviour : MonoBehaviour
     {
         // 「Cube」タグのGameObjectを検索
         objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
-        for(int i = 0; i < objectList.Count; ++i)
-        {
-            objTupleList.Add((objectList[i], false));
-        }
+        rendererList = objectList.Select(obj => obj.GetComponent<Renderer>()).ToList();
 
         // Updateストリームに登録
         this.UpdateAsObservable()
@@ -110,6 +108,13 @@ public class MouseBehaviour : MonoBehaviour
                     obj.GetComponent<Renderer>().material = _defMaterial;
                 }
             });
+
+        // レイキャストでGameObjectを取得した時の挙動
+        this.UpdateAsObservable()
+            .Select(_ => cubeObject)
+            .DistinctUntilChanged()
+            .Skip(1)
+            .Subscribe(_ => Debug.Log("Changed!!"));
     }
 
     /// <summary>
@@ -130,25 +135,12 @@ public class MouseBehaviour : MonoBehaviour
         RaycastHit hit = new RaycastHit();
         if(Physics.Raycast(ray.origin, ray.direction, out hit, 100.0f))
         {
-            foreach(var objTuple in objTupleList)
-            {
-                if(objTuple.isObj != false & hit.collider.gameObject.name == objTuple.obj.name)
-                {
-                    Debug.Log(objTuple.obj.name);
-                }
-            }
-            // if(rendererList.IsAddTriming(hit.collider.gameObject.GetComponent<Renderer>()))
-            // {
-            //     ExecuteEvents.Execute<IRecievedGroup>(
-            //         target: gameObject,
-            //         eventData: null,
-            //         functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
-            //     );
-            //     foreach(var rend in rendererList)
-            //     {
-            //         rend.material = _material;
-            //     }
-            // }
+            cubeObject = hit.collider.gameObject;
+            ExecuteEvents.Execute<IRecievedGroup>(
+                target: gameObject,
+                eventData: null,
+                functor: (reciever, eventData) => reciever.OnRecieved(hit.collider.gameObject)
+            );
         }
     }
-}
+}   

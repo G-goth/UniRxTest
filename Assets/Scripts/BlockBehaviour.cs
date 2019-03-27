@@ -21,13 +21,10 @@ public class BlockBehaviour : MonoBehaviour, IRecievedGroup
     {
         objectList = GameObject.FindGameObjectsWithTag("Cube").ToList();
         rendererList = objectList.Select(obj => obj.GetComponent<Renderer>()).ToList();
-
-        this.UpdateAsObservable()
-            .Subscribe(_ => { });
     }
 
     public void OnRecieved(GameObject obj)
     {
-        Debug.Log(obj.name);
+        // Debug.Log(obj.name);
     }
 }
